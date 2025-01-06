@@ -60,13 +60,6 @@ if uploaded_delinquency and uploaded_dbsimpanan:
         if selected_centers:
             kk_anggota_df = kk_anggota_df[kk_anggota_df["Ctr ID"].isin(selected_centers)]
 
-        # Tambahkan filter untuk Top N berdasarkan Total Balance atau Arreas Due
-        filter_column = st.selectbox("Filter Berdasarkan", ["Total Balance", "Arreas Due"])
-        top_n = st.slider("Tampilkan Top N Data", min_value=1, max_value=len(kk_anggota_df), value=10)
-        
-        # Urutkan data berdasarkan kolom yang dipilih dan ambil Top N
-        kk_anggota_df = kk_anggota_df.sort_values(by=filter_column, ascending=False).head(top_n)
-
         # Tampilkan hasil pada Streamlit
         st.success("Data berhasil diproses dengan filter!")
         st.dataframe(kk_anggota_df)
