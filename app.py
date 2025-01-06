@@ -17,6 +17,11 @@ if uploaded_delinquency and uploaded_dbsimpanan:
         # Rename kolom DbSimpanan untuk konsistensi
         dbsimpanan_df = dbsimpanan_df.rename(columns={"Center ID": "Ctr ID"})
 
+        # Pastikan kolom 'Ctr ID' memiliki tipe data yang sama (string)
+        delinquency_df['Ctr ID'] = delinquency_df['Ctr ID'].astype(str)
+        dbsimpanan_df['Ctr ID'] = dbsimpanan_df['Ctr ID'].astype(str)
+
+
         # Proses Data
         kk_anggota_df = delinquency_df[[
             "Client ID", "Loan No", "Client Name", "Ctr ID", "Total Balance", "Arreas Due"
