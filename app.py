@@ -36,7 +36,11 @@ if uploaded_delinquency and uploaded_dbsimpanan:
             dbsimpanan_df[["Ctr ID", "Officer Name"]],
             on="Ctr ID",
             how="left"
-        )
+        ).drop_duplicates()
+
+        # Then reset the index and recreate the "No." column:
+        kk_anggota_df = kk_anggota_df.reset_index(drop=True)
+        kk_anggota_df["No."] = range(1, len(kk_anggota_df) + 1)
 
         # Tambahkan kolom kosong
         kk_anggota_df["Ditemui/ Tidak Ditemukan"] = ""
