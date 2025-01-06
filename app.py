@@ -12,6 +12,8 @@ if uploaded_delinquency and uploaded_dbsimpanan:
     try:
         # Load Delinquency dan skip baris 1-3
         delinquency_df = pd.read_excel(uploaded_delinquency, skiprows=3)
+
+        # Load DbSimpanan dan skip baris 1
         dbsimpanan_df = pd.read_excel(uploaded_dbsimpanan, skiprows=1)
 
         # Rename kolom DbSimpanan untuk konsistensi
@@ -20,7 +22,6 @@ if uploaded_delinquency and uploaded_dbsimpanan:
         # Pastikan kolom 'Ctr ID' memiliki tipe data yang sama (string)
         delinquency_df['Ctr ID'] = delinquency_df['Ctr ID'].astype(str)
         dbsimpanan_df['Ctr ID'] = dbsimpanan_df['Ctr ID'].astype(str)
-
 
         # Proses Data
         kk_anggota_df = delinquency_df[[
@@ -47,14 +48,17 @@ if uploaded_delinquency and uploaded_dbsimpanan:
             "Total Balance", "Arreas Due", "Ditemui/ Tidak Ditemukan", "KETERANGAN (Kelemahan)"
         ]]
 
-        # Tambahkan filter untuk Center
-        selected_center = st.selectbox(
+        # Tambahkan filter untuk memilih beberapa Center
+        unique_centers = sorted(kk_anggota_df["Ctr ID"].unique().tolist())
+        selected_centers = st.multiselect(
             "Pilih Center (Ctr ID)", 
-            options=["Semua"] + sorted(kk_anggota_df["Ctr ID"].unique().tolist())
+            options=unique_centers,
+            default=unique_centers  # Default semua Center terpilih
         )
         
-        if selected_center != "Semua":
-            kk_anggota_df = kk_anggota_df[kk_anggota_df["Ctr ID"] == selected_center]
+        # Filter data berdasarkan Center yang dipilih
+        if selected_centers:
+            kk_anggota_df = kk_anggota_df[kk_anggota_df["Ctr ID"].isin(selected_centers)]
 
         # Tambahkan filter untuk Top N berdasarkan Total Balance atau Arreas Due
         filter_column = st.selectbox("Filter Berdasarkan", ["Total Balance", "Arreas Due"])
